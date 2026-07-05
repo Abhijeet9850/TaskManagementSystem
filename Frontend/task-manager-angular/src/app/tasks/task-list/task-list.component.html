@@ -1,0 +1,78 @@
+<div class="container">
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <h2>{{ auth.isAdmin() ? 'All Tasks' : 'My Tasks' }}</h2>
+    <button *ngIf="auth.isAdmin()" class="btn btn-primary" (click)="openAddForm()">+ New Task</button>
+  </div>
+
+  <div class="card" *ngFor="let task of tasks" style="margin-bottom:14px;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+      <div>
+        <h3 style="margin:0 0 4px 0;">{{ task.title }}</h3>
+        <div style="font-size:13px; color:#6b7280;">
+          Assigned to: {{ task.assignedEmployeeName }} &middot; Priority: {{ task.priority }}
+          &middot; {{ task.startDate | date:'mediumDate' }} → {{ task.dueDate | date:'mediumDate' }}
+        </div>
+      </div>
+      <span [class]="statusBadgeClass(task)">{{ task.isOverdue ? 'Overdue' : task.status }}</span>
+    </div>
+
+    <p style="font-size:14px; color:#374151;">{{ task.description }}</p>
+
+    <div style="display:flex; gap:8px; margin-top:8px;">
+      <button class="btn btn-secondary" (click)="openEditForm(task)" [disabled]="task.status === 'Completed'">Edit</button>
+      <button *ngIf="auth.isAdmin()" class="btn btn-danger" (click)="deleteTask(task)">Delete</button>
+      <button class="btn btn-secondary" (click)="toggleAttachments(task)">
+        {{ expandedTaskId === task.id ? 'Hide' : 'Show' }} Attachments ({{ task.attachments.length }})
+      </button>
+    </div>
+
+    <div *ngIf="expandedTaskId === task.id" style="margin-top:14px; border-top:1px solid #e5e7eb; padding-top:14px;">
+      <table>
+        <thead>
+          <tr>
+            <th>File</th>
+            <th>Uploaded By</th>
+            <th>Size</th>
+            <th>Type</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let att of task.attachments">
+            <td>{{ att.originalFileName }} <span *ngIf="att.isMain" style="font-size:11px; color:#2563eb;">(main)</span></td>
+            <td>{{ att.uploadedByRole }}</td>
+            <td>{{ formatFileSize(att.fileSizeBytes) }}</td>
+            <td>{{ att.contentType }}</td>
+            <td>
+              <button class="btn btn-secondary" (click)="downloadAttachment(att)">Download</button>
+              <button *ngIf="auth.isAdmin()" class="btn btn-danger" (click)="deleteAttachment(att, task)" style="margin-left:6px;">Delete</button>
+            </td>
+          </tr>
+          <tr *ngIf="task.attachments.length === 0">
+            <td colspan="5" style="text-align:center; color:#9ca3af;">No attachments yet.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="display:flex; gap:16px; margin-top:12px; flex-wrap:wrap;">
+        <!-- Admin: replace the main attachment, only while the task isn't completed -->
+        <label *ngIf="auth.isAdmin() && task.status !== 'Completed'" style="cursor:pointer; color:#2563eb; font-size:13px;">
+          Replace main attachment
+          <input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none;" (change)="replaceMainAttachment($event, task)">
+        </label>
+
+        <!-- Employee (own task) or admin: add a supporting document -->
+        <label style="cursor:pointer; color:#2563eb; font-size:13px;">
+          Upload supporting document
+          <input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none;" (change)="uploadSupportingDocument($event, task)">
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" *ngIf="tasks.length === 0" style="text-align:center; color:#9ca3af;">
+    No tasks found.
+  </div>
+
+  <app-task-form *ngIf="showForm" [task]="editingTask" (closed)="onFormClosed($event)"></app-task-form>
+</div>

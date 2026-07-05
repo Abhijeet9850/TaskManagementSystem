@@ -1,0 +1,14 @@
+<div class="container">
+  <h2>Reports</h2>
+  <div class="card" *ngFor="let r of reportTypes" style="display:flex; justify-content:space-between; align-items:center;">
+    <span>{{ r.label }}</span>
+    <div style="display:flex; gap:10px;">
+      <button class="btn btn-primary" (click)="download(r.value, 'Excel')" [disabled]="loadingKey === r.value + '-Excel'">
+        {{ loadingKey === r.value + '-Excel' ? 'Exporting...' : 'Export Excel' }}
+      </button>
+      <button class="btn btn-secondary" (click)="download(r.value, 'Csv')" [disabled]="loadingKey === r.value + '-Csv'">
+        {{ loadingKey === r.value + '-Csv' ? 'Exporting...' : 'Export CSV' }}
+      </button>
+    </div>
+  </div>
+</div>

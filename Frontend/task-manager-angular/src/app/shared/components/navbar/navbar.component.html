@@ -1,0 +1,17 @@
+<nav *ngIf="auth.isLoggedIn()" class="navbar">
+  <div class="navbar-left">
+    <strong class="navbar-brand">📌 Task Management</strong>
+
+    <a routerLink="/dashboard" routerLinkActive="active" class="navbar-item">Dashboard</a>
+
+    <a *ngIf="auth.isAdmin()" routerLink="/employees" routerLinkActive="active" class="navbar-item">Employees</a>
+
+    <a routerLink="/tasks" routerLinkActive="active" class="navbar-item">Tasks</a>
+
+    <a *ngIf="auth.isAdmin()" routerLink="/reports" routerLinkActive="active" class="navbar-item">Reports</a>
+  </div>
+  <div class="navbar-right">
+    <span class="navbar-user">{{ auth.currentUser()?.fullName }} ({{ auth.currentUser()?.role }})</span>
+    <button class="btn btn-secondary" (click)="logout()">Logout</button>
+  </div>
+</nav>

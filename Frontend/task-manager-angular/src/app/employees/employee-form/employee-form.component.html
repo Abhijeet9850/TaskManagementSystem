@@ -1,0 +1,32 @@
+<div style="position:fixed; inset:0; background:rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center;">
+  <div class="card" style="width:420px;">
+    <h3>{{ isEditMode ? 'Edit Employee' : 'Add Employee' }}</h3>
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <label>Name</label>
+      <input type="text" formControlName="name">
+      <div class="error" *ngIf="f['name'].invalid && f['name'].touched">Name is required.</div>
+
+      <label>Email</label>
+      <input type="email" formControlName="email">
+      <div class="error" *ngIf="f['email'].invalid && f['email'].touched">
+        <span *ngIf="f['email'].errors?.['required']">Email is required.</span>
+        <span *ngIf="f['email'].errors?.['email']">Enter a valid email address.</span>
+      </div>
+
+      <label>Department</label>
+      <input type="text" formControlName="department">
+      <div class="error" *ngIf="f['department'].invalid && f['department'].touched">Department is required.</div>
+
+      <label>Designation</label>
+      <input type="text" formControlName="designation">
+      <div class="error" *ngIf="f['designation'].invalid && f['designation'].touched">Designation is required.</div>
+
+      <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+      <div style="display:flex; gap:10px; margin-top:18px;">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>

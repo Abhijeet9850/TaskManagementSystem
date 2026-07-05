@@ -1,0 +1,58 @@
+<div class="container">
+  <div class="admin-hero">
+    <div>
+      <h2>Admin Dashboard</h2>
+      <p>Overview of employees, tasks, and progress across the team.</p>
+    </div>
+    <div class="admin-hero-icon">🛠️</div>
+  </div>
+
+  <div class="error" *ngIf="errorMessage" style="margin-bottom:16px;">{{ errorMessage }}</div>
+
+  <div class="stat-grid" *ngIf="stats">
+    <div class="stat-card-v2 stat-blue">
+      <div class="icon">👥</div>
+      <div class="value">{{ stats.totalEmployees }}</div>
+      <div class="label">Total Employees</div>
+    </div>
+    <div class="stat-card-v2 stat-amber">
+      <div class="icon">📋</div>
+      <div class="value">{{ stats.totalTasks }}</div>
+      <div class="label">Total Tasks</div>
+    </div>
+    <div class="stat-card-v2 stat-green">
+      <div class="icon">✅</div>
+      <div class="value">{{ stats.completedTasks }}</div>
+      <div class="label">Completed Tasks</div>
+    </div>
+    <div class="stat-card-v2 stat-red">
+      <div class="icon">⏳</div>
+      <div class="value">{{ stats.pendingTasks }}</div>
+      <div class="label">Pending Tasks</div>
+    </div>
+  </div>
+
+  <div class="admin-quick-links" *ngIf="stats">
+    <a routerLink="/employees" class="admin-quick-link">
+      <div class="aql-icon">👥</div>
+      <div>
+        <div class="aql-title">Employees</div>
+        <div class="aql-sub">Manage team members</div>
+      </div>
+    </a>
+    <a routerLink="/tasks" class="admin-quick-link">
+      <div class="aql-icon">📋</div>
+      <div>
+        <div class="aql-title">Tasks</div>
+        <div class="aql-sub">View and assign tasks</div>
+      </div>
+    </a>
+    <a routerLink="/reports" class="admin-quick-link">
+      <div class="aql-icon">📊</div>
+      <div>
+        <div class="aql-title">Reports</div>
+        <div class="aql-sub">Team performance</div>
+      </div>
+    </a>
+  </div>
+</div>

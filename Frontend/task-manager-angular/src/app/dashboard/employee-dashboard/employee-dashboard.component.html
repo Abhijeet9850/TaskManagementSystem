@@ -1,0 +1,45 @@
+<div class="container">
+  <div class="dash-hero">
+    <h2>{{ greeting }}, {{ auth.currentUser()?.fullName }} 👋</h2>
+    <p>Here's a snapshot of your tasks today.</p>
+  </div>
+
+  <div class="error" *ngIf="errorMessage" style="margin-bottom:16px;">{{ errorMessage }}</div>
+
+  <div class="stat-grid" *ngIf="stats">
+    <div class="stat-card-v2 stat-blue">
+      <div class="icon">📋</div>
+      <div class="value">{{ stats.myTasks }}</div>
+      <div class="label">My Tasks</div>
+    </div>
+    <div class="stat-card-v2 stat-green">
+      <div class="icon">✅</div>
+      <div class="value">{{ stats.completedTasks }}</div>
+      <div class="label">Completed</div>
+    </div>
+    <div class="stat-card-v2 stat-amber">
+      <div class="icon">⏳</div>
+      <div class="value">{{ stats.pendingTasks }}</div>
+      <div class="label">Pending</div>
+    </div>
+    <div class="stat-card-v2 stat-red">
+      <div class="icon">⚠️</div>
+      <div class="value">{{ stats.overdueTasks }}</div>
+      <div class="label">Overdue</div>
+    </div>
+  </div>
+
+  <div class="card" *ngIf="stats && stats.myTasks > 0" style="margin-top:20px;">
+    <div style="display:flex; justify-content:space-between; font-size:13px; color:#6b7280; margin-bottom:6px;">
+      <span>Completion progress</span>
+      <span>{{ completionPercent }}%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" [style.width.%]="completionPercent"></div>
+    </div>
+  </div>
+
+  <div class="card" *ngIf="stats && stats.myTasks === 0" style="margin-top:20px; text-align:center; color:#9ca3af;">
+    No tasks assigned yet — check back soon, or ask your admin if you're expecting one.
+  </div>
+</div>

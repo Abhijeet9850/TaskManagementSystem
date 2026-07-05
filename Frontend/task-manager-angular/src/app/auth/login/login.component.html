@@ -1,0 +1,31 @@
+<div class="container" style="max-width:420px;">
+  <div class="card">
+    <h2>Login</h2>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <label>Email</label>
+      <input type="email" formControlName="email">
+      <div class="error" *ngIf="f['email'].invalid && f['email'].touched">
+        <span *ngIf="f['email'].errors?.['required']">Email is required.</span>
+        <span *ngIf="f['email'].errors?.['email']">Enter a valid email address.</span>
+      </div>
+
+      <label>Password</label>
+      <input type="password" formControlName="password">
+      <div class="error" *ngIf="f['password'].invalid && f['password'].touched">
+        Password is required.
+      </div>
+
+      <label style="display:flex; align-items:center; gap:8px; margin-top:14px;">
+        <input type="checkbox" style="width:auto;" formControlName="rememberMe">
+        Remember Me
+      </label>
+
+      <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+      <button class="btn btn-primary" type="submit" style="margin-top:16px; width:100%;" [disabled]="loading">
+        {{ loading ? 'Signing in...' : 'Login' }}
+      </button>
+    </form>
+    <p style="margin-top:14px; font-size:14px;">Don't have an account? <a routerLink="/register">Register</a></p>
+  </div>
+</div>

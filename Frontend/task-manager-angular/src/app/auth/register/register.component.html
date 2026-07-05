@@ -1,0 +1,47 @@
+<div class="container" style="max-width:460px;">
+  <div class="card">
+    <h2>Create Account</h2>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <label>Full Name</label>
+      <input type="text" formControlName="fullName">
+      <div class="error" *ngIf="f['fullName'].invalid && f['fullName'].touched">
+        Full name is required.
+      </div>
+
+      <label>Email</label>
+      <input type="email" formControlName="email">
+      <div class="error" *ngIf="f['email'].invalid && f['email'].touched">
+        <span *ngIf="f['email'].errors?.['required']">Email is required.</span>
+        <span *ngIf="f['email'].errors?.['email']">Enter a valid email address.</span>
+      </div>
+
+      <label>Password</label>
+      <input type="password" formControlName="password">
+      <div class="error" *ngIf="f['password'].invalid && f['password'].touched">
+        <span *ngIf="f['password'].errors?.['required']">Password is required.</span>
+        <span *ngIf="f['password'].errors?.['weakPassword']">
+          Must be at least 8 characters with an uppercase letter, a lowercase letter, and a number.
+        </span>
+      </div>
+
+      <label>Confirm Password</label>
+      <input type="password" formControlName="confirmPassword">
+      <div class="error" *ngIf="f['confirmPassword'].touched && form.errors?.['passwordMismatch']">
+        Passwords do not match.
+      </div>
+
+      <label>Role</label>
+      <select formControlName="role">
+        <option value="Employee">Employee</option>
+        <option value="Admin">Admin</option>
+      </select>
+
+      <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+      <button class="btn btn-primary" type="submit" style="margin-top:16px; width:100%;" [disabled]="loading">
+        {{ loading ? 'Creating account...' : 'Register' }}
+      </button>
+    </form>
+    <p style="margin-top:14px; font-size:14px;">Already have an account? <a routerLink="/login">Login</a></p>
+  </div>
+</div>

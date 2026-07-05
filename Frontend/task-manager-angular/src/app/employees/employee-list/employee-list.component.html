@@ -1,0 +1,88 @@
+<div class="container">
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <h2>Employees</h2>
+    <button class="btn btn-primary" (click)="openAddForm()">+ Add Employee</button>
+  </div>
+
+  <div class="card">
+    <input type="text" placeholder="Search by name, email, department, designation..."
+           [formControl]="searchControl">
+  </div>
+
+  <div class="error" *ngIf="errorMessage" style="margin-bottom:16px;">{{ errorMessage }}</div>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th (click)="sort('name')" style="cursor:pointer;">Name {{ sortBy === 'name' ? (sortDir === 'asc' ? '▲' : '▼') : '' }}</th>
+          <th>Email</th>
+          <th (click)="sort('department')" style="cursor:pointer;">Department {{ sortBy === 'department' ? (sortDir === 'asc' ? '▲' : '▼') : '' }}</th>
+          <th (click)="sort('designation')" style="cursor:pointer;">Designation {{ sortBy === 'designation' ? (sortDir === 'asc' ? '▲' : '▼') : '' }}</th>
+          <th>Tasks</th>
+          <th>Login Account</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let emp of employees">
+          <tr>
+            <td>{{ emp.name }}</td>
+            <td>{{ emp.email }}</td>
+            <td>{{ emp.department }}</td>
+            <td>{{ emp.designation }}</td>
+            <td>{{ emp.completedTasks }}/{{ emp.totalTasks }}</td>
+            <td>
+              <span *ngIf="emp.linkedUserEmail" class="badge badge-completed">{{ emp.linkedUserEmail }}</span>
+              <span *ngIf="!emp.linkedUserEmail" class="badge badge-overdue">Not linked</span>
+            </td>
+            <td>
+              <button class="btn btn-secondary" (click)="openEditForm(emp)">Edit</button>
+              <button class="btn btn-danger" (click)="deleteEmployee(emp)" style="margin-left:6px;">Delete</button>
+              <button class="btn btn-secondary" (click)="openLinkForm(emp)" style="margin-left:6px;">
+                {{ emp.linkedUserEmail ? 'Relink' : 'Link Login' }}
+              </button>
+              <button *ngIf="emp.linkedUserEmail" class="btn btn-secondary" (click)="unlinkUser(emp)" style="margin-left:6px;">Unlink</button>
+            </td>
+          </tr>
+          <tr *ngIf="linkingEmployeeId === emp.id">
+            <td colspan="7" style="background:#f9fafb;">
+              <div style="display:flex; gap:10px; align-items:flex-start; padding:8px 0;">
+                <div style="flex:1;">
+                  <label style="margin-top:0;">Login account email to link to "{{ emp.name }}"</label>
+                  <input type="email" placeholder="e.g. the employee's registered login email" [formControl]="linkEmailControl">
+                  <div class="error" *ngIf="linkEmailControl.invalid && linkEmailControl.touched">
+                    Enter a valid email address.
+                  </div>
+                  <div class="error" *ngIf="linkError">{{ linkError }}</div>
+                  <div *ngIf="linkMessage" style="color:#065f46; font-size:13px; margin-top:4px;">{{ linkMessage }}</div>
+                  <div style="font-size:12px; color:#6b7280; margin-top:6px;">
+                    Note: the employee must log out and back in after linking to get an updated session.
+                  </div>
+                </div>
+                <div style="display:flex; gap:8px; margin-top:22px;">
+                  <button class="btn btn-primary" (click)="submitLink(emp)">Link</button>
+                  <button class="btn btn-secondary" (click)="cancelLink()">Close</button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+        <tr *ngIf="employees.length === 0">
+          <td colspan="7" style="text-align:center; color:#9ca3af;">No employees found.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px;">
+      <span style="font-size:13px; color:#6b7280;">{{ totalCount }} employees total</span>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button class="btn btn-secondary" (click)="goToPage(page - 1)" [disabled]="page === 1">Prev</button>
+        <span style="font-size:13px;">Page {{ page }} of {{ totalPages || 1 }}</span>
+        <button class="btn btn-secondary" (click)="goToPage(page + 1)" [disabled]="page === totalPages">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <app-employee-form *ngIf="showForm" [employee]="editingEmployee" (closed)="onFormClosed($event)"></app-employee-form>
+</div>
